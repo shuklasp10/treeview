@@ -1,5 +1,6 @@
 import data from './data.json';
 import GenerateTree from './GenerateTree';
+import './App.css'
 
 function App() {
   // console.log(data);

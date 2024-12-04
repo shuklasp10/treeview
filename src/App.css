@@ -1,0 +1,21 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: black;
+    color: white;
+}
+
+button{
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    font-size: 12px;
+    vertical-align: text-top;
+}
+.node{
+    display: inline-block;
+}
