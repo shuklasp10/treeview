@@ -3,10 +3,14 @@ import GenerateTree from './GenerateTree';
 import './App.css'
 
 function App() {
-  // console.log(data);
+  console.log(data);
   return (
     <>
-      <GenerateTree root = {data} parentSelected={false} depth={0} />
+      <GenerateTree 
+      root = {data} 
+      parentSelected={false} 
+      depth={0}
+      syncParent={()=>{}} />
     </>
   );
 }

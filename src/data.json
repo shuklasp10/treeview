@@ -1,18 +1,23 @@
 {
     "name": "Root",
+    "id":1,
     "children": [
       {
         "name": "Parent 1",
+        "id":2,
         "children": [
           {
             "name": "Child 1.1",
+            "id":3,
             "children": []
           },
           {
             "name": "Child 1.2",
+            "id":4,
             "children": [
               {
                 "name": "Grandchild 1.2.1",
+                "id":5,
                 "children": []
               }
             ]
@@ -21,19 +26,23 @@
       },
       {
         "name": "Parent 2",
+        "id":6,
         "children": [
           {
             "name": "Child 2.1",
+            "id":7,
             "children": []
           },
           {
             "name": "Child 2.2",
+            "id":8,
             "children": []
           }
         ]
       },
       {
         "name": "Parent 3",
+        "id":9,
         "children": []
       }
     ]
