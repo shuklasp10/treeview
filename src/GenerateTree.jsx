@@ -3,10 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 const status = { CHECKED: 'checked', UNCHECKED: 'unchecked', INDETERMINATE: 'indeterminate' }
 
 const GenerateTree = ({ root, parentState, depth, syncParent }) => {
-  const nodeState = useRef(status.UNCHECKED);
-  const childCountRef = useRef({ selected: 0, indeterminate: 0 })
+  const sessionData = JSON.parse(sessionStorage.getItem(root.id))
+  // console.log(sessionData)
+  // debugger  
+  const nodeState = useRef(sessionData?.nodeState || status.UNCHECKED);
+  const childCountRef = useRef(sessionData?.childCountRef || { selected: 0, indeterminate: 0 })
   const [show, setShow] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(nodeState.current==status.CHECKED);
   const checkboxRef = useRef(null);
 
   useEffect(() => {
@@ -14,6 +17,13 @@ const GenerateTree = ({ root, parentState, depth, syncParent }) => {
       toggleCheckbox(parentState);
     }
   }, [parentState])
+
+  useEffect(()=>{
+    checkboxRef.current.indeterminate = nodeState.current == status.INDETERMINATE
+    return (()=>{
+      sessionStorage.setItem(root.id, JSON.stringify({nodeState: nodeState.current, childCountRef: childCountRef.current}))
+    })
+  },[])
 
   function checkIndeterminate() {
     const { selected, indeterminate } = childCountRef.current

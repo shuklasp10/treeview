@@ -3,7 +3,7 @@ import GenerateTree from './GenerateTree';
 import './App.css'
 
 function App() {
-  console.log(data);
+  // console.log(data);
   return (
     <>
       <GenerateTree 
