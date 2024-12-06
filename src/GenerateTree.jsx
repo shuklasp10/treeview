@@ -19,7 +19,8 @@ const GenerateTree = ({ root, parentState, depth, syncParent }) => {
   useEffect(() => {
     checkboxRef.current.indeterminate = nodeState.current == status.INDETERMINATE
     return (() => {
-      sessionStorage.setItem(root.id, JSON.stringify({ nodeState: nodeState.current, childCountRef: childCountRef.current }))
+      console.log(show);
+      sessionStorage.setItem(root.id, JSON.stringify({ nodeState: nodeState.current, childCountRef: childCountRef.current, show }))
     })
   }, [])
 
@@ -85,7 +86,7 @@ const GenerateTree = ({ root, parentState, depth, syncParent }) => {
 
   return (
     <div>
-      {<button onClick={() => setShow(!show)}>{show ? "-" : "+"}</button>}
+      {<button className='expand-button' onClick={() => setShow(!show)}>{show ? "-" : "+"}</button>}
 
       <div className='node' style={{ marginLeft: 10 * depth }}>
         <input

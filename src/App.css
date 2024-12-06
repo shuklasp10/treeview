@@ -9,13 +9,23 @@ body{
     color: white;
 }
 
-button{
+.expand-button{
     width: 15px;
     height: 15px;
     margin-right: 5px;
     font-size: 12px;
     vertical-align: text-top;
 }
+
+.form-button{
+    padding: 3px;
+    border-radius: 3px;
+    cursor: pointer;
+}
 .node{
     display: inline-block;
+}
+
+.error{
+    color: red;
 }
