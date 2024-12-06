@@ -68,16 +68,16 @@ const JsonGenerator = ({ setTree, setShowTree }) => {
                 {error}
             </div>}
             <div>
-                <label htmlFor="depth">Depth: </label>
-                <input type="number" name="depth" id="depth" required />
+                <label className='form-label' htmlFor="depth">Depth: </label>
+                <input className='form-input' type="number" name="depth" id="depth" required />
             </div>
             <div>
-                <label htmlFor="maxChild">Maximum Child: </label>
-                <input type="number" name='maxChild' id='maxChild' />
+                <label className='form-label' htmlFor="maxChild">Maximum Child: </label>
+                <input className='form-input' type="number" name='maxChild' id='maxChild' />
             </div>
             <div>
-                <label htmlFor="minChild">Minimum Child: </label>
-                <input type="number" name="minChild" id="minChild" />
+                <label className='form-label' htmlFor="minChild">Minimum Child: </label>
+                <input className='form-input' type="number" name="minChild" id="minChild" />
             </div>
             <button className='form-button' type="submit">Generate</button>
         </form>
