@@ -11,20 +11,33 @@ const NAMES = [
 ];
 
 function generateRandom(maxLimit, minLimit = 1) {
-    return Math.floor(Math.random() * (maxLimit - minLimit + 1)) + minLimit
+    return Math.floor(Math.random() * (maxLimit - minLimit+1)) + minLimit
 }
 
-function generateJson(maxDepth, noOfChildNodes,) {
-    if (maxDepth == 0) {
-        return []
-    }
-    return Array(generateRandom(noOfChildNodes[1], noOfChildNodes[0])).fill().map(() => {
+function generateNode(n){
+    return Array(n).fill().map(() => {
         return {
             id: counter++,
             name: NAMES[generateRandom(50)-1],
-            children: generateJson(maxDepth - 1, noOfChildNodes)
+            children: []
         }
     })
+}
+
+function generateJSON(depth, [maxChild, minChild]) {
+    var tree = generateNode(maxChild);
+    var nodeWithEmptyChild = [...tree];
+    while (depth > 1) {
+        let newNodeWithEmptyChild = []
+        nodeWithEmptyChild = nodeWithEmptyChild.map((node) => {
+            let newNodes = generateNode(generateRandom(maxChild,minChild))
+            node.children = newNodes;
+            newNodeWithEmptyChild.push(...newNodes)
+        })
+        nodeWithEmptyChild = newNodeWithEmptyChild
+        depth -= 1
+    }
+    return tree
 }
 
 const JsonGenerator = ({ setTree, setShowTree }) => {
@@ -49,17 +62,16 @@ const JsonGenerator = ({ setTree, setShowTree }) => {
     }
 
     function handleFormData(e) {
-        console.log('running')
         e.preventDefault();
-        // console.log(parseInt(document.getElementById('depth').value))
+
         const depth = parseInt(document.getElementById('depth').value)
         const maxChild = parseInt(document.getElementById('maxChild').value)
         const minChild = parseInt(document.getElementById('minChild').value) || 1
+
         if(isValid(depth, maxChild, minChild)){
-            const newTree = generateJson(depth, [maxChild+1,minChild]);
+            const newTree = generateJSON(depth, [maxChild,minChild]);
             setTree(newTree)
-        }
-        
+        }  
     }
 
     return (

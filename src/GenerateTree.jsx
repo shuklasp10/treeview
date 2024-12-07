@@ -1,87 +1,101 @@
 import { useEffect, useRef, useState } from 'react';
 
-const status = { CHECKED: 'checked', UNCHECKED: 'unchecked', INDETERMINATE: 'indeterminate' }
+const state = { CHECKED: 'checked', UNCHECKED: 'unchecked', INDETERMINATE: 'indeterminate' }
 
 const GenerateTree = ({ root, parentState, depth, syncParent }) => {
-  const sessionData = JSON.parse(sessionStorage.getItem(root.id))
-  const nodeState = useRef(sessionData?.nodeState || status.UNCHECKED);
-  const childCountRef = useRef(sessionData?.childCountRef || { selected: 0, indeterminate: 0 })
-  const [show, setShow] = useState(false);
-  const [checked, setChecked] = useState(nodeState.current == status.CHECKED);
+  // refs
+  const nodeState = useRef(state.UNCHECKED);
+  const childCountRef = useRef({ selected: 0, indeterminate: 0 })
   const checkboxRef = useRef(null);
+  // states for UI inputs
+  const [show, setShow] = useState(false);
+  const [checked, setChecked] = useState(false);
 
+  // store and retrieve node state from session data when node is mounted and unmounted 
   useEffect(() => {
-    if (parentState == status.CHECKED || parentState == status.UNCHECKED) {
-      toggleCheckbox(parentState);
+    const sessionData = JSON.parse(sessionStorage.getItem(root.id))
+    if(sessionData){
+      nodeState.current = sessionData.nodeState
+      childCountRef.current = sessionData.childCountRef
+      setChecked(nodeState.current == state.CHECKED)
+      setShow(sessionData.show)
     }
-  }, [parentState])
-
-  useEffect(() => {
-    checkboxRef.current.indeterminate = nodeState.current == status.INDETERMINATE
+    checkboxRef.current.indeterminate = nodeState.current == state.INDETERMINATE
     return (() => {
-      console.log(show);
-      sessionStorage.setItem(root.id, JSON.stringify({ nodeState: nodeState.current, childCountRef: childCountRef.current, show }))
+      sessionStorage.setItem(root.id, JSON.stringify({
+        nodeState: nodeState.current,
+        childCountRef: childCountRef.current,
+        show: show
+      }))
     })
   }, [])
 
+   // sync child node checked state with parent node
+   useEffect(() => {
+    if (parentState == state.CHECKED || parentState == state.UNCHECKED) {
+      changeNodeState(parentState);
+    }
+  }, [parentState])
+
+  // check for indeterminate after child node is changed
   function checkIndeterminate() {
     const { selected, indeterminate } = childCountRef.current
     if (selected == root.children.length) {
-      console.log(root.name)
-      toggleCheckbox(status.CHECKED)
+      changeNodeState(state.CHECKED)
     }
     else if (indeterminate > 0 || selected > 0) {
-      toggleCheckbox(status.INDETERMINATE)
+      changeNodeState(state.INDETERMINATE)
     }
     else {
-      toggleCheckbox(status.UNCHECKED)
+      changeNodeState(state.UNCHECKED)
     }
   }
 
+  // track child node states in parent node
   function syncChild(prevState, nextState) {
-    if (prevState == status.INDETERMINATE) {
-      if (nextState == status.CHECKED) {
+    if (prevState == state.INDETERMINATE) {
+      if (nextState == state.CHECKED) {
         childCountRef.current.selected += 1;
         childCountRef.current.indeterminate -= 1
       }
-      else if (nextState == status.UNCHECKED) {
+      else if (nextState == state.UNCHECKED) {
         childCountRef.current.indeterminate -= 1
       }
     }
-    else if (prevState == status.CHECKED) {
-      if (nextState == status.INDETERMINATE) {
+    else if (prevState == state.CHECKED) {
+      if (nextState == state.INDETERMINATE) {
         childCountRef.current.selected -= 1;
         childCountRef.current.indeterminate += 1
       }
-      else if (nextState == status.UNCHECKED) {
+      else if (nextState == state.UNCHECKED) {
         childCountRef.current.selected -= 1
       }
     }
     else {
-      if (nextState == status.INDETERMINATE) {
-        console.log('root.name')
+      if (nextState == state.INDETERMINATE) {
         childCountRef.current.indeterminate += 1
       }
-      else if (nextState == status.CHECKED) {
+      else if (nextState == state.CHECKED) {
         childCountRef.current.selected += 1
       }
     }
     checkIndeterminate();
   }
 
-  function toggleCheckbox(newState) {
-    // debugger
+  //handle node state changes and trigger parent sync
+  function changeNodeState(newState) {
     if (newState !== nodeState.current) {
       syncParent(nodeState.current, newState)
       nodeState.current = newState;
-      setChecked(newState == status.CHECKED)
-      checkboxRef.current.indeterminate = newState == status.INDETERMINATE
-      setShow(nodeState.current == status.CHECKED ? true : show)
+      setChecked(newState == state.CHECKED)
+      checkboxRef.current.indeterminate = newState == state.INDETERMINATE
+      setShow(nodeState.current == state.CHECKED ? true : show)
     }
   }
 
+  // handle checkbox UI change
   function handleCheckbox(e) {
-    toggleCheckbox(e.target.checked ? status.CHECKED : status.UNCHECKED)
+    changeNodeState(e.target.checked ? state.CHECKED : state.UNCHECKED)
   }
 
   return (

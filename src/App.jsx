@@ -2,12 +2,17 @@ import data from './data.json';
 import GenerateTree from './GenerateTree';
 import './App.css'
 import JsonGenerator from './JsonGenerator';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
   const [tree, setTree] = useState(data);
-  // const [showTree, setShowTree] = useState(false);
-  console.log(tree);
+  
+  useEffect(()=>{
+    return ()=>{
+      sessionStorage.clear()
+    }
+  })
+
   return (
     <>
       <JsonGenerator setTree={setTree} />
@@ -17,7 +22,6 @@ function App() {
         parentSelected={false}
         depth={0}
         syncParent={() => { }} />)}
-      {/* <Test /> */}
     </>
   );
 }
