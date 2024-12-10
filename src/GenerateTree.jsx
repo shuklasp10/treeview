@@ -18,14 +18,13 @@ const GenerateTree = ({ root, parentState, depth, syncParent }) => {
       nodeState.current = sessionData.nodeState
       childCountRef.current = sessionData.childCountRef
       setChecked(nodeState.current == state.CHECKED)
-      setShow(sessionData.show)
+      setShow(nodeState.current == state.INDETERMINATE || nodeState.current == state.CHECKED)
     }
     checkboxRef.current.indeterminate = nodeState.current == state.INDETERMINATE
     return (() => {
       sessionStorage.setItem(root.id, JSON.stringify({
         nodeState: nodeState.current,
         childCountRef: childCountRef.current,
-        show: show
       }))
     })
   }, [])
